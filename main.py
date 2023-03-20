@@ -67,10 +67,10 @@ def process_tweet(tweet):
             try:
                 api.update_status(f'{message}')
                 print(f'[{BC.OKCYAN}Event{BC.RESET}] {BC.BOLD}{BC.OKCYAN}Tweet{BC.RESET} sent to {BC.BOLD}{BC.OKCYAN}{user}{BC.RESET}')
-            except tweepy.error.RateLimitError:
+            except:
                 print(f'{BC.FAIL}Error during request to Twitter API.{BC.RESET})')
             # tweet the response
-        except openai.error.APIError:
+        except:
             print(f'{BC.FAIL}Error during request to OpenAI API.{BC.RESET}')
 
 
