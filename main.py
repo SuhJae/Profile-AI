@@ -49,10 +49,10 @@ def process_tweet(tweet):
             return
 
         prompt = f'''Retrieved tweets from Twitter user {tweet.user.name}({tweet.user.screen_name}).
-    Look at the 30 most recent tweets below to infer what topics the user is interested in, how often they tweet, and their personality.
-    The answer must always start with "최근 트윗 30개를 기반으로 @{tweet.user.screen_name}님은" and must be written between from 100 to 140 characters and in fluent Korean with appropriate conjunctions.
-    
-    ---'''
+Look at the 30 most recent tweets below to infer what topics the user is interested in, how often they tweet, and their personality.
+The answer must always start with "최근 트윗 30개를 기반으로 @{tweet.user.screen_name}님은" and must be written between from 100 to 140 characters and in fluent Korean with appropriate conjunctions.
+Lastly, the answer must be in friendly and polite tone.
+---'''
 
         for i in tweets:
             if not i.text.startswith('@Profile_Bot'):
