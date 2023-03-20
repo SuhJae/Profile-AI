@@ -68,7 +68,7 @@ Lastly, the answer must be in friendly and polite tone.
                 api.update_status(f'{message}')
                 print(f'[{BC.OKCYAN}Event{BC.RESET}] {BC.BOLD}{BC.OKCYAN}Tweet{BC.RESET} sent to {BC.BOLD}{BC.OKCYAN}{user}{BC.RESET}')
             except:
-                print(f'{BC.FAIL}Error during request to Twitter API.{BC.RESET})')
+                print(f'{BC.FAIL}Error during request to Twitter API.{BC.RESET}')
             # tweet the response
         except:
             print(f'{BC.FAIL}Error during request to OpenAI API.{BC.RESET}')
