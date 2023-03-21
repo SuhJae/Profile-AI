@@ -47,8 +47,7 @@ def process_tweet(tweet):
         if r.get(f'done:{user}') is not None:
             # DM the user that the bot has already processed their tweet
             try:
-                link = f'https://twitter.com/Profile_Bot/status/{r.get(f"done:{user}").decode("utf-8")}'
-                api.send_direct_message(user, f'{tweet.user.name}님 안녕하세요? 12시간 안에 이미 {tweet.user.name}님의 요청을 처리 했으며 아래 링크에서 확인 가능합니다. {link}')
+                api.send_direct_message(user, f'{tweet.user.name}님 안녕하세요? 12시간 안에 이미 {tweet.user.name}님의 요청을 처리 했으며 아래 링크에서 확인 가능합니다.\n')
                 print(f'[{BC.OKCYAN}Event{BC.RESET}] {BC.BOLD}{BC.OKCYAN}DM{BC.RESET} sent to {BC.BOLD}{BC.OKCYAN}{user}{BC.RESET}')
             except:
                 print(f'{BC.FAIL}Error during request to Twitter API. (DM){BC.RESET}')
@@ -92,8 +91,8 @@ Lastly, the answer must be in polite tone.
             print(f'[{BC.OKCYAN}Response{BC.RESET}] OpenAI API: {BC.BOLD}{BC.OKCYAN}{message}{BC.RESET}')
 
             try:
-                sent = api.update_status(f'{message}')
-                r.setex(f'done:{user}', 43200, sent)
+                api.update_status(f'{message}')
+                r.setex(f'done:{user}', 43200, 0)
                 print(f'[{BC.OKCYAN}Event{BC.RESET}] {BC.BOLD}{BC.OKCYAN}Tweet{BC.RESET} sent to {BC.BOLD}{BC.OKCYAN}{user}{BC.RESET}')
             except:
                 print(f'{BC.FAIL}Error during request to Twitter API.{BC.RESET}')
