@@ -47,10 +47,11 @@ def process_tweet(tweet):
         if r.get(user) is not None:
             # DM the user that the bot has already processed their tweet
             try:
-                api.send_direct_message(user, f'{tweet.user.name}님 안녕하세요? 12시간 안에 이미 {tweet.user.name}님의 요청을 처리 했으며 아래 링크에서 확인 가능합니다.\n')
+                api.send_direct_message(tweet.user.id, f'{tweet.user.name}님 안녕하세요? 12시간 안에 이미 {tweet.user.name}님의 요청을 처리 했으며 아래 링크에서 확인 가능합니다.\n')
                 print(f'[{BC.OKCYAN}Event{BC.RESET}] {BC.BOLD}{BC.OKCYAN}DM{BC.RESET} sent to {BC.BOLD}{BC.OKCYAN}{user}{BC.RESET}')
             except:
                 print(f'{BC.FAIL}Error during request to Twitter API. (DM){BC.RESET}')
+            return
 
         print(f'[{BC.OKCYAN}Event{BC.RESET}] {BC.BOLD}{BC.OKCYAN}Tweet{BC.RESET} from {BC.BOLD}{BC.OKCYAN}{user}{BC.RESET}')
         tweets = api.user_timeline(screen_name=user, count=30)
