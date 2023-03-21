@@ -2,6 +2,7 @@ import configparser
 import threading
 import tweepy
 import time
+import redis
 import openai
 
 start = time.time()
@@ -11,6 +12,7 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 
 openai.api_key = config['CREDENTIALS']['OpenAI_Key']
+r = redis.Redis(host=config['REDIS']['host'], port=int(config['REDIS']['port']), db=int(config['REDIS']['db']))
 
 # class for the formatting on terminal
 class BC:
@@ -41,6 +43,30 @@ def process_tweet(tweet):
     if tweet.text.startswith('@Profile_Bot'):
         tweet = api.get_status(tweet.id)
         user = tweet.user.screen_name
+
+        if r.get(f'done:{user}') is not None:
+            # DM the user that the bot has already processed their tweet
+            try:
+                link = f'https://twitter.com/Profile_Bot/status/{r.get(f"done:{user}").decode("utf-8")}'
+                api.send_direct_message(user, f'{tweet.user.name}님 안녕하세요? 12시간 안에 이미 {tweet.user.name}님의 요청을 처리 했으며 아래 링크에서 확인 가능합니다. {link}')
+                print(f'[{BC.OKCYAN}Event{BC.RESET}] {BC.BOLD}{BC.OKCYAN}DM{BC.RESET} sent to {BC.BOLD}{BC.OKCYAN}{user}{BC.RESET}')
+            except:
+                print(f'{BC.FAIL}Error during request to Twitter API. (DM){BC.RESET}')
+
+
+
+            return
+        elif r.get(f'{user}') is not None:
+            message = r.get(f'{user}').decode('utf-8')
+            print(f'[{BC.OKCYAN}Event{BC.RESET}] {BC.BOLD}{BC.OKCYAN}Tweet{BC.RESET} from {BC.BOLD}{BC.OKCYAN}{user}{BC.RESET} already processed. Sending cached response...')
+            try:
+                sent = api.update_status(f'{message}')
+                r.setex(f'done:{user}', 43200, sent)
+                print(f'[{BC.OKCYAN}Event{BC.RESET}] {BC.BOLD}{BC.OKCYAN}Tweet{BC.RESET} sent to {BC.BOLD}{BC.OKCYAN}{user}{BC.RESET}')
+            except:
+                print(f'{BC.FAIL}Error during request to Twitter API.{BC.RESET}')
+            return
+
         print(f'[{BC.OKCYAN}Event{BC.RESET}] {BC.BOLD}{BC.OKCYAN}Tweet{BC.RESET} from {BC.BOLD}{BC.OKCYAN}{user}{BC.RESET}')
         tweets = api.user_timeline(screen_name=user, count=30)
 
@@ -51,7 +77,7 @@ def process_tweet(tweet):
         prompt = f'''Retrieved tweets from Twitter user {tweet.user.name}({tweet.user.screen_name}).
 Look at the 30 most recent tweets below to infer what topics the user is interested in, how often they tweet, and their personality.
 The answer must always start with "최근 트윗 30개를 기반으로 @{tweet.user.screen_name}님은" and must be written between from 100 to 140 characters and in fluent Korean with appropriate conjunctions.
-Lastly, the answer must be in friendly and polite tone.
+Lastly, the answer must be in polite tone.
 ---'''
 
         for i in tweets:
@@ -62,18 +88,18 @@ Lastly, the answer must be in friendly and polite tone.
 
         try:
             message = get_response(prompt)
-            print(f'[{BC.OKCYAN}Response{BC.RESET}] {BC.BOLD}{BC.OKCYAN}Response{BC.RESET} from OpenAI API: {BC.BOLD}{BC.OKCYAN}{message}{BC.RESET}')
+            r.setex(f'{user}', 43200, message)
+            print(f'[{BC.OKCYAN}Response{BC.RESET}] OpenAI API: {BC.BOLD}{BC.OKCYAN}{message}{BC.RESET}')
 
             try:
-                api.update_status(f'{message}')
+                sent = api.update_status(f'{message}')
+                r.setex(f'done:{user}', 43200, sent)
                 print(f'[{BC.OKCYAN}Event{BC.RESET}] {BC.BOLD}{BC.OKCYAN}Tweet{BC.RESET} sent to {BC.BOLD}{BC.OKCYAN}{user}{BC.RESET}')
             except:
                 print(f'{BC.FAIL}Error during request to Twitter API.{BC.RESET}')
             # tweet the response
         except:
             print(f'{BC.FAIL}Error during request to OpenAI API.{BC.RESET}')
-
-
 
 
 class MyStream(tweepy.StreamingClient):
@@ -107,6 +133,7 @@ except:
 
 # get the limit of the api
 print(f'{BC.HEADER}Getting the limit of the API...{BC.RESET}')
+
 limit = api.rate_limit_status()
 for i in limit['resources']:
     for j in limit['resources'][i]:
@@ -128,7 +155,7 @@ for i in range(len(rules.data)):
 print(f'Rules on server:{BC.OKCYAN} {f"{BC.RESET}, {BC.OKCYAN}".join(i for i in server_rules)}{BC.RESET}')
 print(f'Rules set on local:{BC.OKCYAN} {f"{BC.RESET}, {BC.OKCYAN}".join(i for i in local_rules)}{BC.RESET}')
 
-#check if the rules are the same
+# check if the rules are the same
 if local_rules == server_rules:
     print(f'Rule already exists, skipping...')
 else:

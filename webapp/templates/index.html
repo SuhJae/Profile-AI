@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>프로필 분석 봇 답변 확인</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'IBM Plex Sans KR', sans-serif;
+      font-size: 16px;
+      color: #2e2e2e;
+      line-height: 1.5;
+      background-color: #f5f5f5;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .container {
+      width: 60%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1 0 auto;
+    }
+    h1 {
+      font-size: 48px;
+      font-weight: 800;
+      text-align: center;
+      margin-top: 80px;
+      margin-bottom: 60px;
+    }
+    h4 {
+      font-size: 14px;
+      font-weight: 800;
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 60px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    label {
+      display: block;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    input[type=text] {
+      padding: 16px;
+      font-size: 24px;
+      border: 1px solid #d0d0d0;
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 12px;
+      box-sizing: border-box;
+      border-radius: 0px;
+    }
+    input[type=submit] {
+      padding: 16px 32px;
+      background-color: #4d4dff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 24px;
+      font-weight: 700;
+      transition: background-color 0.2s ease-in-out;
+      width: 100%;
+      border-radius: 0px;
+      max-width: 400px;
+      box-sizing: border-box;
+      margin-bottom: 12px;
+    }
+    input[type=submit]:hover {
+      background-color: #3a3aff;
+    }
+    .message {
+      padding: 16px;
+      border: 1px solid #d0d0d0;
+      border-radius: 0px;
+      background-color: #fff;
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 400;
+      box-sizing: border-box;
+      margin-bottom: 12px;
+    }
+    footer {
+      text-align: center;
+      margin-top: auto;
+      background-color: #ddd;
+      padding: 20px;
+      width: 100%;
+      bottom: 0;
+      position: sticky;
+    }
+    footer p {
+      font-size: 14px;
+      margin: 0;
+    }
+    footer a {
+      font-weight: 700;
+      color: #2e2e2e;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>프로필 분석 봇 답변 확인하기</h1>
+    <form method="post">
+      <label for="twitter_handle">트위터 핸들을 @없이 입력해 주세요. (대소문자 구분 있음)</label>
+      <input type="text" name="twitter_handle" id="twitter_handle" placeholder=" _SuhJae" required>
+      <input type="submit" value="답변 확인하기">
+    </form>
+      {% if message %}
+      <div class="message">
+        {{ message }}
+      </form>
+      </div>
+    <form action="https://twitter.com/intent/tweet" method="GET" target="_blank">
+    <input type="hidden" name="text" value="{{ message }}">
+    <input type="submit" value="트윗으로 공유하기" class="share">
+      {% endif %}
+    <h4>위에서 답변을 확인하기 위해서는 우선 <a href="https://twitter.com/Profile_Bot">프로필 분석 봇</a>에서 답변을 생성해야 합니다.<br>또한, 12시간 이내의 답변만 보이며, 답변 생성 이후 12시간 경과 시 서버에서 데이터가 삭제됩니다.</h4>
+  </div>
+  <footer>
+    <p>Follow me on Twitter: <a href="https://twitter.com/_SuhJae">@_SuhJae</a></p>
+  </footer>
+</body>
+</html>
