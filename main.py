@@ -44,6 +44,10 @@ def process_tweet(tweet):
         tweet = api.get_status(tweet.id)
         user = tweet.user.screen_name
 
+        # if account is protected, skip
+        if tweet.user.protected:
+            return
+
         if r.get(user) is not None:
             # DM the user that the bot has already processed their tweet
             try:
