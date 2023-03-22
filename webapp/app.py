@@ -28,8 +28,8 @@ class BC:
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    print(f'[{BC.OKCYAN}Event{BC.RESET}] {BC.BOLD}{BC.OKCYAN}GET{BC.RESET} request from {BC.BOLD}{BC.OKCYAN}{request.remote_addr}{BC.RESET}')
     if request.method == 'POST':
+        print(f'[{BC.OKCYAN}Event{BC.RESET}] {BC.BOLD}{BC.OKCYAN}POST{BC.RESET} request ({BC.BOLD}{BC.OKCYAN}{request.form["twitter_handle"]}{BC.RESET})')
         user = request.form['twitter_handle']
         message = r.get(user)
         if message is None:
@@ -38,6 +38,7 @@ def index():
             message = message.decode('utf-8')
         return render_template('index.html', message=message)
     else:
+        print(f'[{BC.OKCYAN}Event{BC.RESET}] {BC.BOLD}{BC.OKCYAN}GET{BC.RESET} request ({BC.OKCYAN}index.html{BC.RESET})')
         return render_template('index.html')
 
 if __name__ == '__main__':

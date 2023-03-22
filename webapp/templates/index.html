@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>프로필 분석 봇 답변 확인</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR&display=swap" rel="stylesheet">
   <style>
     body {
@@ -106,11 +107,32 @@
       font-weight: 700;
       color: #2e2e2e;
     }
+
+    @media screen and (max-width: 768px) {
+      .container {
+        width: 90%;
+      }
+      h1 {
+        font-size: 32px;
+      }
+      label {
+        font-size: 18px;
+      }
+      input[type=text] {
+        font-size: 18px;
+      }
+      input[type=submit] {
+        font-size: 18px;
+      }
+      h4 {
+        font-size: 12px;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>프로필 분석 봇 답변 확인하기</h1>
+    <h1>프로필 분석 봇 답변 확인</h1>
     <form method="post">
       <label for="twitter_handle">트위터 핸들을 @없이 입력해 주세요. (대소문자 구분 있음)</label>
       <input type="text" name="twitter_handle" id="twitter_handle" placeholder=" _SuhJae" required>
