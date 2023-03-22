@@ -33,7 +33,7 @@
     }
     h4 {
       font-size: 14px;
-      font-weight: 800;
+      font-weight: 400;
       text-align: center;
       margin-top: 20px;
       margin-bottom: 60px;
@@ -46,18 +46,14 @@
     label {
       display: block;
       font-size: 20px;
-      font-weight: 700;
+      font-weight: 400;
       margin-bottom: 16px;
     }
-    input[type=text] {
-      padding: 16px;
-      font-size: 24px;
-      border: 1px solid #d0d0d0;
-      width: 100%;
-      max-width: 400px;
-      margin-bottom: 12px;
-      box-sizing: border-box;
-      border-radius: 0px;
+    share {
+      display: block;
+      font-size: 20px;
+      font-weight: 400;
+      margin-bottom: 16px;
     }
     input[type=submit] {
       padding: 16px 32px;
@@ -70,7 +66,7 @@
       transition: background-color 0.2s ease-in-out;
       width: 100%;
       border-radius: 0px;
-      max-width: 400px;
+      max-width: 600px;
       box-sizing: border-box;
       margin-bottom: 12px;
     }
@@ -104,7 +100,7 @@
       margin: 0;
     }
     footer a {
-      font-weight: 700;
+      font-weight: 400;
       color: #2e2e2e;
     }
 
@@ -145,7 +141,7 @@
       </div>
     <form action="https://twitter.com/intent/tweet" method="GET" target="_blank">
     <input type="hidden" name="text" value="{{ message }}">
-    <input type="submit" value="트윗으로 공유하기" class="share">
+    <input type="submit" value="트윗으로 공유하기">
       {% endif %}
     <h4>위에서 답변을 확인하기 위해서는 우선 <a href="https://twitter.com/Profile_Bot">프로필 분석 봇</a>에서 답변을 생성해야 합니다.<br>또한, 12시간 이내의 답변만 보이며, 답변 생성 이후 12시간 경과 시 서버에서 데이터가 삭제됩니다.</h4>
   </div>
