@@ -30,10 +30,10 @@ class BC:
 def index():
     if request.method == 'POST':
         print(f'[{BC.OKCYAN}Event{BC.RESET}] {BC.BOLD}{BC.OKCYAN}POST{BC.RESET} request ({BC.BOLD}{BC.OKCYAN}{request.form["twitter_handle"]}{BC.RESET})')
-        user = request.form['twitter_handle']
+        user = request.form['twitter_handle'].replace('@', '').lower()
         message = r.get(user)
         if message is None:
-            message = "{}에 대한 답변을 찾을 수 없습니다. (대소문자 구분 있음)".format(user)
+            message = "{}에 대한 답변을 찾을 수 없습니다.".format(user)
         else:
             message = message.decode('utf-8')
         return render_template('index.html', message=message)

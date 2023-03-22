@@ -1,6 +1,6 @@
-from flask import Flask, render_template, request
 import redis
 import configparser
+import time
 
 # Load config file
 config = configparser.ConfigParser()
@@ -9,25 +9,34 @@ config.read('config.ini')
 # Connect to Redis
 r = redis.Redis(
     host=config['REDIS']['host'],
-    port=config['REDIS']['port'],
-    password=config['REDIS']['password'],
-    db=config['REDIS']['db']
+    port=int(config['REDIS']['port']),
+    db=int(config['REDIS']['db'])
 )
 
-app = Flask(__name__)
+# Function to make all keys lowercase and preserve expiry
+def make_keys_lowercase(r):
+    # Get all keys
+    keys = r.keys('*')
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    if request.method == 'POST':
-        user = request.form['twitter_handle']
-        message = r.get(user)
-        if message is None:
-            message = "No response found for user {}".format(user)
+    for key in keys:
+        lower_key = key.decode().lower()
+
+        # Check if the key is already lowercase
+        if key.decode() == lower_key:
+            continue
+
+        # Get the remaining time to live (TTL) for the key
+        ttl = r.ttl(key)
+
+        # Dump and delete the original key
+        value_dump = r.dump(key)
+        r.delete(key)
+
+        # Restore the key with lowercase name and the original TTL
+        if ttl == -1:  # Key doesn't have an expiry
+            r.restore(lower_key, 0, value_dump)
         else:
-            message = message.decode('utf-8')
-        return render_template('index.html', message=message)
-    else:
-        return render_template('index.html')
+            r.restore(lower_key, int(ttl * 1000), value_dump)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# Call the function to update keys
+make_keys_lowercase(r)

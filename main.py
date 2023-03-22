@@ -48,7 +48,7 @@ def process_tweet(tweet):
         if tweet.user.protected:
             return
 
-        if r.get(user) is not None:
+        if r.get(user.lower()) is not None:
             # DM the user that the bot has already processed their tweet
             try:
                 api.send_direct_message(tweet.user.id, f'{tweet.user.name}님 안녕하세요? 12시간 안에 이미 {tweet.user.name}님의 요청을 처리 했으며 아래 링크에서 확인 가능합니다.\nhttps://profile.suhjae.dev/')
@@ -78,7 +78,7 @@ Lastly, the answer must be in polite tone.
 
         try:
             message = get_response(prompt)
-            r.setex(f'{user}', 43200, message)
+            r.setex(user.lower(), 43200, message)
             print(f'[{BC.OKCYAN}Response{BC.RESET}] OpenAI API: {BC.BOLD}{BC.OKCYAN}{message}{BC.RESET}')
 
             try:
