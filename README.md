@@ -1,3 +1,6 @@
+### 📜 Archived Repository
+This repository has been archived, due to recent change in Twitter API policy.
+
 ![](https://img.shields.io/pypi/pyversions/tweepy?style=flat-square)
 ![](https://img.shields.io/pypi/pyversions/redis?style=flat-square)
 ![](https://img.shields.io/pypi/pyversions/openai?style=flat-square)
